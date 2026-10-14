@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DEFISP - Fiscalização | Igarapé-Miri</title>
+    <style>
+        :root {
+            --primary-color: #1b5e20;
+            --secondary-color: #2e7d32;
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #c62828;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 15px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .search-box, .form-autuado, .selected-section, .calc-section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .search-box input, .form-autuado input, .form-autuado select, .form-autuado textarea, .calc-section input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.05rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            margin-top: 5px;
+            font-family: inherit;
+        }
+
+        .search-box input:focus, .form-autuado input:focus, .form-autuado select:focus, .form-autuado textarea:focus, .calc-section input:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .law-card {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--secondary-color);
+        }
+
+        .law-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .penalty {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        button.select-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        button.select-btn:active {
+            opacity: 0.8;
+        }
+
+        .selected-section {
+            border: 2px dashed var(--secondary-color);
+        }
+
+        .selected-section h2 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .selected-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .selected-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .calc-section h2 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .calc-result {
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 15px;
+        }
+
+        .pdf-btn {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .pdf-btn:hover {
+            background-color: #c62828;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .search-box, button, .select-btn, .remove-btn { display: none !important; }
+            .container { max-width: 100%; margin: 0; }
+            .form-autuado, .selected-section, .calc-section { box-shadow: none; border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>DEFISP - Fiscalização</h1>
+        <p>Auto de Infração e Consulta de Leis - Igarapé-Miri</p>
+    </header>
+
+    <!-- Dados do Infrator, Local e Descrição -->
+    <div class="form-autuado">
+        <h2 style="font-size: 1.2rem; color: var(--primary-color); margin-top: 0;">Dados do Infrator e Local</h2>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dataHora">Data e Hora:</label>
+                <input type="datetime-local" id="dataHora">
+            </div>
+            <div class="form-group">
+                <label for="cpfCnpj">CPF ou CNPJ:</label>
+                <input type="text" id="cpfCnpj" placeholder="000.000.000-00">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="nomeInfrator">Nome / Razão Social do Infrator:</label>
+            <input type="text" id="nomeInfrator" placeholder="Nome completo ou empresa autuada">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="localInfracao">Local da Infração (Endereço):</label>
+                <input type="text" id="localInfracao" placeholder="Rua, número, bairro...">
+            </div>
+            <div class="form-group">
+                <label for="tipoLocal">Tipo de Local:</label>
+                <select id="tipoLocal">
+                    <option value="Obra">Obra</option>
+                    <option value="Residência">Residência</option>
+                    <option value="Comércio">Comércio</option>
+                    <option value="Logradouro Público">Logradouro Público</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="responsavel">Responsável acompanhante:</label>
+            <input type="text" id="responsavel" placeholder="Nome do responsável presente no local">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+            <label for="descricaoFatos">Descrição Detalhada / Constatação da Infração:</label>
+            <textarea id="descricaoFatos" rows="3" placeholder="Descreva o que foi constatado no local..."></textarea>
+        </div>
+    </div>
+
+    <!-- Caixa de Pesquisa -->
+    <div class="search-box">
+        <label for="searchInput" style="font-weight: 600; font-size: 0.9rem; color: #444; display: block; margin-bottom: 5px;">Pesquisar Infração:</label>
+        <input type="text" id="searchInput" placeholder="Digite palavra-chave (ex: lixo, som, obra, alvará)...">
+    </div>
+
+    <!-- Painel de Penalidades Selecionadas -->
+    <div class="selected-section">
+        <h2>Penalidades Selecionadas</h2>
+        <ul id="selectedList" class="selected-list">
+            <li style="color: #888; text-align: center; justify-content: center;">Nenhuma infração selecionada ainda.</li>
+        </ul>
+        <div style="font-weight: bold; font-size: 1.05rem; text-align: right; color: var(--primary-color);">
+            Total Acumulado: <span id="totalUfmBadge">0</span> UFM
+        </div>
+    </div>
+
+    <!-- Seção de Cálculo de Multas -->
+    <div class="calc-section">
+        <h2>Calculadora de Conversão em R$</h2>
+        <div class="form-group">
+            <label for="ufmValor">Valor unitário atual da UFM (R$):</label>
+            <input type="number" id="ufmValor" inputmode="decimal" step="0.01" placeholder="Ex: 5.00" oninput="calcularMulta()">
+        </div>
+        <div class="form-group">
+            <label for="ufmQtd">Total de UFM (Automático):</label>
+            <input type="number" id="ufmQtd" inputmode="decimal" step="0.01" placeholder="0" readonly style="background: #eee;">
+        </div>
+        <div class="calc-result" id="resultadoCalculo">
+            Valor Total: R$ 0,00
+        </div>
+
+        <button class="pdf-btn" onclick="gerarPDF()">
+            🖨️ Salvar / Gerar Resumo em PDF
+        </button>
+    </div>
+
+    <!-- Resultados da Pesquisa -->
+    <div style="margin-top: 20px; font-weight: bold; color: var(--primary-color); font-size: 1.1rem; margin-bottom: 10px;">Leis e Infrações Disponíveis:</div>
+    <div id="resultsContainer" class="results-container"></div>
+</div>
+
+<script>
+    const baseDados = [
+        { id: 1, lei: "Lei 5.030/2011", artigo: "Art. 4º e 5º", descricao: "Varrer para bocas de lobo/sarjetas, lançar em terrenos baldios ou queimar lixo.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 2, lei: "Lei 5.030/2011", artigo: "Art. 7º e 8º", descricao: "Impedir ou dificultar o livre escoamento de águas em cursos, canos ou sarjetas.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 3, lei: "Lei 5.030/2011", artigo: "Art. 9º", descricao: "Lançar esgoto ou águas servidas diretamente em logradouros, valetas ou terrenos.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 4, lei: "Lei 5.030/2011", artigo: "Art. 10", descricao: "Manter água estagnada em recipientes/pneus ou impedir acesso da fiscalização.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 5, lei: "Lei 5.030/2011", artigo: "Art. 11", descricao: "Comprometer propriedades físicas, químicas ou biológicas do meio ambiente.", penalidade: "191 UFM (base)", qtdUfm: 191 },
+        { id: 6, lei: "Lei 5.030/2011", artigo: "Art. 13", descricao: "Desacatar exigência de colocação de dispositivos e filtros em chaminés.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 7, lei: "Lei 5.030/2011", artigo: "Art. 14", descricao: "Fumar em estabelecimentos públicos fechados.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 8, lei: "Lei 5.030/2011", artigo: "Art. 15", descricao: "Podar, cortar ou danificar arborização pública / colocar cartazes indevidos.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 9, lei: "Lei 5.030/2011", artigo: "Art. 16", descricao: "Funcionar sem a respectiva licença sanitária.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 10, lei: "Lei 5.030/2011", artigo: "Art. 17", descricao: "Produzir, expor ou vender gêneros alimentícios deteriorados ou nocivos à saúde.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 11, lei: "Lei 5.030/2011", artigo: "Art. 20 a 27", descricao: "Desobedecer disposições gerais de posturas municipais.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 12, lei: "Lei 5.030/2011", artigo: "Art. 28, 29 e 30", descricao: "Manter piscinas em condições impróprias, poluídas ou contaminadas.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 13, lei: "Lei 5.030/2011", artigo: "Art. 31 a 34", descricao: "Exercer atividade sem o respectivo Alvará de Funcionamento.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 14, lei: "Lei 5.030/2011", artigo: "Art. 35 a 41", descricao: "Desobedecer normas de funcionamento comercial.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 15, lei: "Lei 5.030/2011", artigo: "Art. 42 e 43", descricao: "Exposições em vias e logradouros públicos sem autorização.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 16, lei: "Lei 5.030/2011", artigo: "Art. 45 e 46", descricao: "Comércio ambulante sem licença ou com mercadoria divergente.", penalidade: "20 UFM", qtdUfm: 20 },
+        { id: 17, lei: "Lei 5.030/2011", artigo: "Art. 47", descricao: "Expor/vender material pornográfico ou obsceno a menores de 18 anos.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 18, lei: "Lei 5.030/2011", artigo: "Art. 48", descricao: "Não zelar pela ordem em estabelecimentos com venda de bebidas alcoólicas.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 19, lei: "Lei 5.030/2011", artigo: "Art. 49", descricao: "Vender bebidas alcoólicas ou cigarros a menores de 18 anos.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 20, lei: "Lei 5.030/2011", artigo: "Art. 50", descricao: "Perturbar o sossego público com ruídos ou sons excessivos.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 21, lei: "Lei 5.030/2011", artigo: "Art. 51", descricao: "Propaganda sonora irregular acima dos níveis permitidos ou horários.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 22, lei: "Lei 5.030/2011", artigo: "Art. 52", descricao: "Executar atividade com ruído incômodo antes das 8h ou após as 22h.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 23, lei: "Lei 5.030/2011", artigo: "Art. 53 a 56", descricao: "Divertimento público, circos ou parques sem a devida licença.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 24, lei: "Lei 5.030/2011", artigo: "Art. 57 a 61", descricao: "Embaraçar ou impedir o livre trânsito de pedestres ou veículos.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 25, lei: "Lei 5.030/2011", artigo: "Art. 63", descricao: "Remover ou danificar sinalização de trânsito em logradouros.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 26, lei: "Lei 5.030/2011", artigo: "Art. 64", descricao: "Atirar detritos ou substâncias perigosas/incômodas aos transeuntes.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 27, lei: "Lei 5.030/2011", artigo: "Art. 65", descricao: "Excesso de velocidade de veículos ou condução inadequada de animais/carroças.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 28, lei: "Lei 5.030/2011", artigo: "Art. 67", descricao: "Circular com cães de grande porte desprovidos de focinheira.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 29, lei: "Lei 5.030/2011", artigo: "Art. 70", descricao: "Animais não domésticos soltos ou permanentes em logradouros públicos.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 30, lei: "Lei 5.030/2011", artigo: "Art. 71", descricao: "Criar animais no perímetro urbano com risco à segurança e saúde pública.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 31, lei: "Lei 5.030/2011", artigo: "Art. 77", descricao: "Transportar ou conservar inflamáveis/explosivos nas vias de forma irregular.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 32, lei: "Lei 5.030/2011", artigo: "Art. 78", descricao: "Transportar explosivos/inflamáveis sem adotar providências de segurança.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 33, lei: "Lei 5.030/2011", artigo: "Art. 79", descricao: "Uso de fogos de artifício sem observar normas municipais/estaduais.", penalidade: "96 UFM", qtdUfm: 96 },
+        { id: 34, lei: "Lei 5.030/2011", artigo: "Art. 82 e 83", descricao: "Explorar pedreiras, olarias e depósitos de areia/saibro sem licença.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 35, lei: "Lei 5.030/2011", artigo: "Art. 85", descricao: "Extração ilegal de areia em cursos d'água.", penalidade: "192 UFM", qtdUfm: 192 },
+        { id: 36, lei: "Lei 5.030/2011", artigo: "Art. 86 e 87", descricao: "Publicidade sem licença ou prejudicial ao trânsito e paisagem.", penalidade: "39 UFM", qtdUfm: 39 },
+        { id: 37, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item I)", descricao: "Iniciar ou executar obras sem licença da Prefeitura.", penalidade: "10 UFM/m²", qtdUfm: 10 },
+        { id: 38, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item II)", descricao: "Executar obras em desacordo com o termo de alinhamento.", penalidade: "20 UFM", qtdUfm: 20 },
+        { id: 39, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item III)", descricao: "Construir em desacordo com o termo de alinhamento.", penalidade: "20 UFM", qtdUfm: 20 },
+        { id: 40, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item IV)", descricao: "Omitir cursos d'água ou topografia acidentada no projeto.", penalidade: "20 UFM", qtdUfm: 20 },
+        { id: 41, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item V)", descricao: "Demolir prédios sem licença da Prefeitura.", penalidade: "10 UFM", qtdUfm: 10 },
+        { id: 42, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item VI)", descricao: "Não manter projeto ou alvará no local da obra.", penalidade: "10 UFM", qtdUfm: 10 },
+        { id: 43, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item VII)", descricao: "Deixar materiais no logradouro público além do tempo de descarga.", penalidade: "20 UFM", qtdUfm: 20 },
+        { id: 44, lei: "Lei 5.297/2025", artigo: "Art. 111 (Item VIII)", descricao: "Deixar de colocar tapumes e andaimes em obras no alinhamento.", penalidade: "20 UFM", qtdUfm: 20 }
+    ];
+
+    let itensSelecionados = [];
+
+    // Executado assim que a página carrega inteira
+    window.addEventListener('DOMContentLoaded', () => {
+        const agora = new Date();
+        agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+        document.getElementById('dataHora').value = agora.toISOString().slice(0,16);
+        
+        // Exibe a lista completa de infrações logo no início
+        exibirResultados(baseDados);
+    });
+
+    function exibirResultados(dados) {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = '';
+
+        if (dados.length === 0) {
+            container.innerHTML = '<div class="law-card"><p>Nenhuma infração encontrada.</p></div>';
+            return;
+        }
+
+        dados.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'law-card';
+            card.innerHTML = `
+                <span class="badge">${item.lei}</span>
+                <h3>${item.artigo}</h3>
+                <p><strong>Descrição:</strong> ${item.descricao}</p>
+                <div class="penalty">Penalidade: ${item.penalidade}</div>
+                <button class="select-btn" onclick="adicionarInfracao(${item.id})">+ Adicionar Penalidade</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Evento de busca em tempo real
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const termo = this.value.toLowerCase();
+        const resultados = baseDados.filter(item => 
+            item.descricao.toLowerCase().includes(termo) || 
+            item.artigo.toLowerCase().includes(termo) || 
+            item.lei.toLowerCase().includes(termo)
+        );
+        exibirResultados(resultados);
+    });
+
+    function adicionarInfracao(id) {
+        const item = baseDados.find(d => d.id === id);
+        if (item) {
+            itensSelecionados.push({ ...item, uniqueKey: Date.now() + Math.random() });
+            atualizarPainelSelecionados();
+        }
+    }
+
+    function removerInfracao(uniqueKey) {
+        itensSelecionados = itensSelecionados.filter(item => item.uniqueKey !== uniqueKey);
+        atualizarPainelSelecionados();
+    }
+
+    function atualizarPainelSelecionados() {
+        const lista = document.getElementById('selectedList');
+        lista.innerHTML = '';
+
+        if (itensSelecionados.length === 0) {
+            lista.innerHTML = '<li style="color: #888; text-align: center; justify-content: center;">Nenhuma infração selecionada ainda.</li>';
+            document.getElementById('totalUfmBadge').innerText = '0';
+            document.getElementById('ufmQtd').value = '';
+            calcularMulta();
+            return;
+        }
+
+        let somaUfm = 0;
+        itensSelecionados.forEach(item => {
+            somaUfm += item.qtdUfm;
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span><strong>${item.lei} - ${item.artigo}</strong> (${item.penalidade})</span>
+                <button class="remove-btn" onclick="removerInfracao(${item.uniqueKey})">Remover</button>
+            `;
+            lista.appendChild(li);
+        });
+
+        document.getElementById('totalUfmBadge').innerText = somaUfm;
+        document.getElementById('ufmQtd').value = somaUfm;
+        calcularMulta();
+    }
+
+    function calcularMulta() {
+        const valorUfm = parseFloat(document.getElementById('ufmValor').value) || 0;
+        const qtdUfm = parseFloat(document.getElementById('ufmQtd').value) || 0;
+        const total = valorUfm * qtdUfm;
+
+        document.getElementById('resultadoCalculo').innerText = 
+            `Valor Total: R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function gerarPDF() {
+        window.print();
+    }
+</script>
+
+</body>
+</html>
